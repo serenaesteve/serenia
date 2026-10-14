@@ -1,0 +1,115 @@
+<!doctype html>
+<!-- data-kroma-manual: la app crea los componentes de Kroma a mano, no hace falta el arranque automático -->
+<html lang="es" data-kroma-manual>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Serenia</title>
+  <meta name="description" content="Serenia: reproductor multimedia para la web. Música y vídeo con biblioteca, letras, subtítulos, ecualizador, efectos y mini reproductor.">
+  <meta name="theme-color" content="#f4f6fc">
+  <!-- Tema antes de pintar nada (así no hay parpadeo): el guardado o el del sistema -->
+  <script>
+    (function () {
+      var t = null;
+      try {
+        t = JSON.parse(localStorage.getItem("kroma:tema"));
+      } catch (e) {}
+      if (t !== "claro" && t !== "oscuro") t = matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro";
+      document.documentElement.dataset.tema = t;
+      document.querySelector('meta[name="theme-color"]').content = t === "oscuro" ? "#0b1020" : "#f4f6fc";
+      // El icono de la pestaña es el mismo logo de la app, en su versión clara u oscura
+      document.getElementById("favicon").href = "iconos/logo-" + t + ".svg";
+    })();
+  </script>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="iconos/logo-claro.svg" id="favicon">
+  <link rel="apple-touch-icon" href="iconos/icono-192.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="kroma/kroma.css">
+  <link rel="stylesheet" href="app/app.css">
+</head>
+
+<body class="sin-pista">
+  <div class="aviso-file" id="aviso-file" hidden>
+    <strong>Abre Serenia con un servidor local.</strong>
+    Con <code>file://</code> el navegador bloquea los módulos JavaScript. Usa <em>Live Server</em> en VS Code
+    o ejecuta <code>python3 -m http.server</code> en esta carpeta y entra en <code>http://localhost:8000</code>.
+  </div>
+  <!-- Diagnóstico de arranque: si la app no llega a arrancar, explica por qué en vez de quedarse en blanco -->
+  <div class="fallo-arranque" id="fallo-arranque" hidden>
+    <h1>Serenia no ha podido arrancar</h1>
+    <p>Esto es lo que ha fallado:</p>
+    <ul id="fallo-lista"></ul>
+    <p>Soluciones habituales:</p>
+    <ol>
+      <li>Ábrelo con un servidor local (<code>bash iniciar.sh</code> o Live Server), no con doble clic.</li>
+      <li>Recarga sin caché: <kbd>Ctrl</kbd> + <kbd>Mayús</kbd> + <kbd>R</kbd>.</li>
+      <li>Usa un navegador actualizado (Chrome, Edge o Firefox recientes).</li>
+    </ol>
+  </div>
+  <script>
+    if (location.protocol === "file:") document.getElementById("aviso-file").hidden = false;
+    window.__erroresArranque = [];
+    addEventListener(
+      "error",
+      (e) => {
+        const origen = e.target && e.target.src ? `No se pudo descargar ${e.target.src}` : null;
+        const donde = e.filename ? ` (${e.filename.split("/").slice(-2).join("/")}:${e.lineno})` : "";
+        __erroresArranque.push(origen || `${e.message}${donde}`);
+      },
+      true,
+    );
+    addEventListener("unhandledrejection", (e) => __erroresArranque.push(String((e.reason && (e.reason.stack || e.reason.message)) || e.reason)));
+    // Si a los 15 s no ha arrancado (y no está descargando la demo), mostramos el diagnóstico
+    setTimeout(function () {
+      if (document.body.classList.contains("lista") || document.querySelector(".cargando-demo")) return;
+      var lista = document.getElementById("fallo-lista");
+      var errores = __erroresArranque.length ? __erroresArranque : ["No hay errores registrados: puede que el navegador no soporte módulos ES o que la página se haya abierto como archivo (file://)."];
+      errores.forEach(function (t) {
+        var li = document.createElement("li");
+        li.textContent = t;
+        lista.appendChild(li);
+      });
+      document.getElementById("fallo-arranque").hidden = false;
+    }, 15000);
+  </script>
+
+  <!-- Fondo de aurora y grano -->
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="grano" aria-hidden="true"></div>
+
+  <div class="app">
+    <aside class="lateral" id="lateral" aria-label="Navegación"></aside>
+
+    <main class="principal" id="principal">
+      <header class="cabecera" id="cabecera"></header>
+      <div class="vista" id="vista" aria-live="polite"></div>
+    </main>
+
+    <aside class="panel" id="panel" aria-label="Panel lateral"></aside>
+
+    <footer class="barra" id="barra" aria-label="Reproducción"></footer>
+  </div>
+
+  <!-- Vídeo flotante cuando sales de «Ahora suena» -->
+  <div class="video-flotante" id="video-flotante" hidden></div>
+
+  <!-- Aquí esperan los elementos multimedia que no se ven -->
+  <div id="aparcamiento" hidden></div>
+
+  <!-- Capa al arrastrar archivos encima de la ventana -->
+  <div class="soltar" id="soltar" hidden>
+    <div class="soltar-caja">
+      <svg class="kr-icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+      <strong>Suelta para añadir a tu biblioteca</strong>
+      <span>Música, vídeos, carpetas enteras, letras (.lrc) y subtítulos (.srt / .vtt)</span>
+    </div>
+  </div>
+
+  <script type="module" src="app/main.js"></script>
+</body>
+</html>

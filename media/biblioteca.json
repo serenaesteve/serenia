@@ -1,0 +1,56 @@
+{
+  "version": 2,
+  "elementos": [
+    {
+      "tipo": "audio",
+      "src": "media/musica/amanecer-digital.mp3",
+      "letra": "media/musica/amanecer-digital.vtt"
+    },
+    {
+      "tipo": "audio",
+      "src": "media/musica/neon.mp3"
+    },
+    {
+      "tipo": "audio",
+      "src": "media/musica/pixel.mp3"
+    },
+    {
+      "tipo": "audio",
+      "src": "media/musica/brisa.ogg"
+    },
+    {
+      "tipo": "audio",
+      "src": "media/musica/marea.mp3",
+      "letra": "media/musica/marea.lrc"
+    },
+    {
+      "tipo": "audio",
+      "src": "media/musica/medianoche.mp3"
+    },
+    {
+      "tipo": "video",
+      "src": "media/videos/bienvenida.mp4",
+      "titulo": "Bienvenida a Serenia",
+      "artista": "Serenia",
+      "subtitulos": [
+        "media/videos/bienvenida.en.vtt",
+        "media/videos/bienvenida.es.srt"
+      ],
+      "capitulos": "media/videos/bienvenida.capitulos.vtt"
+    },
+    {
+      "tipo": "video",
+      "src": "media/videos/viaje-fractal.mp4",
+      "titulo": "Viaje fractal",
+      "artista": "Nébula",
+      "subtitulos": [],
+      "capitulos": "media/videos/viaje-fractal.capitulos.vtt"
+    },
+    {
+      "tipo": "video",
+      "src": "media/videos/vida-artificial.mp4",
+      "titulo": "Vida artificial",
+      "artista": "Kroma Synth"
+    }
+  ]
+}

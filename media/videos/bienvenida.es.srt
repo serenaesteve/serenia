@@ -1,0 +1,26 @@
+1
+00:00:00,500 --> 00:00:03,800
+Hola, esto es Serenia: un reproductor hecho a mano.
+
+2
+00:00:04,000 --> 00:00:07,600
+Estos subtítulos vienen de un archivo .srt
+que Serenia convierte a WebVTT al vuelo.
+
+3
+00:00:08,000 --> 00:00:11,500
+Abre el panel de efectos con la tecla E
+o con el botón de ajustes.
+
+4
+00:00:12,000 --> 00:00:15,500
+Pasa el ratón por la barra de progreso
+para ver una miniatura del fotograma.
+
+5
+00:00:16,000 --> 00:00:19,500
+Pulsa S para guardar el fotograma actual en PNG.
+
+6
+00:00:20,000 --> 00:00:23,500
+Y pulsa ? para ver todos los atajos de teclado.
